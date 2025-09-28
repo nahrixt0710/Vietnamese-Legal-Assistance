@@ -1,0 +1,57 @@
+import re
+import json
+
+def split_into_articles(content):
+    """
+    Tách văn bản luật thành từng Điều dựa trên regex "Điều <số>"
+    """
+    # Regex tìm Điều (ví dụ: Điều 1., Điều 23, Điều 100a...)
+    pattern = r"(Điều\s+\d+[a-zA-Z]*)"
+    parts = re.split(pattern, content)
+
+    chunks = []
+    current_article = ""
+    for part in parts:
+        if part.strip().startswith("Điều"):
+            if current_article:
+                chunks.append(current_article.strip())
+            current_article = part
+        else:
+            current_article += " " + part
+
+    if current_article:
+        chunks.append(current_article.strip())
+
+    return chunks
+
+
+def preprocess_json(input_file, output_file="laws_chunks.json"):
+    """
+    Đọc file JSON gốc, tách nội dung thành các chunk (Điều) và lưu ra JSON mới
+    """
+    with open(input_file, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    processed = []
+    for item in data:
+        title = item["title"]
+        content = item["content"]
+
+        # Tách chunk
+        articles = split_into_articles(content)
+
+        for i, article in enumerate(articles):
+            processed.append({
+                "law": title,
+                "article_id": f"{title}_dieu_{i+1}",
+                "content": article
+            })
+
+    with open(output_file, "w", encoding="utf-8") as f:
+        json.dump(processed, f, ensure_ascii=False, indent=2)
+
+    print(f"Đã tách thành {len(processed)} chunks và lưu vào {output_file}")
+
+
+if __name__ == "__main__":
+    preprocess_json("laws_data.json")
