@@ -29,6 +29,17 @@ Mở **Command Prompt (CMD)** hoặc **Terminal** và chạy lệnh sau để t�
 ollama pull qwen2:7b
 ```
 
+---
+
+### Tạo Pinecone API
+Truy cập trang https://www.pinecone.io. Tạo tài khoản và vào API Keys để lấy API Key.
+
+Tạo file .env trong thư mục gốc của project (cùng cấp với gradio_app.py), sau đó thêm nội dung sau:
+```bash
+PINECONE_API_KEY=your_pinecone_api_key_here
+```
+---
+
 ### Chạy ứng dụng Gradio
 Sau khi tải mô hình xong, chạy chatbot bằng lệnh:
 ```bash
