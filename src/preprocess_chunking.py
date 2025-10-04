@@ -3,12 +3,7 @@ import json
 from langchain.text_splitter import TextSplitter
 from langchain_community.document_loaders import Docx2txtLoader
 
-
 class LawArticleSplitter(TextSplitter):
-    """
-    Tách văn bản luật thành từng Điều dựa trên regex "Điều <số>"
-    """
-
     def split_text(self, text: str):
         pattern = r"(Điều\s+\d+[a-zA-Z]*)"
         parts = re.split(pattern, text)
@@ -29,10 +24,7 @@ class LawArticleSplitter(TextSplitter):
         return chunks
 
 
-def process_with_langchain(input_file, output_file="laws_chunks.json"):
-    """
-    Đọc JSON đã load, chunk theo Điều bằng LangChain và lưu ra JSON
-    """
+def process_with_langchain(input_file, output_file="json/laws_chunks.json"):
     with open(input_file, "r", encoding="utf-8") as f:
         data = json.load(f)
 
@@ -43,7 +35,6 @@ def process_with_langchain(input_file, output_file="laws_chunks.json"):
         title = item["title"]
         content = item["text"]
 
-        # Dùng splitter của LangChain
         chunks = splitter.split_text(content)
 
         for i, chunk in enumerate(chunks):
@@ -60,4 +51,4 @@ def process_with_langchain(input_file, output_file="laws_chunks.json"):
 
 
 if __name__ == "__main__":
-    process_with_langchain("laws_data.json")
+    process_with_langchain("json/laws_data.json")

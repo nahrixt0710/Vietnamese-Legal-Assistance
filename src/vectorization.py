@@ -17,12 +17,10 @@ if index_name not in pc.list_indexes().names():
 
 index = pc.Index(index_name)
 
-# Embeddings
 embeddings = HuggingFaceEmbeddings(
     model_name="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 )
 
-# Load dữ liệu chunked
 with open("laws_chunks.json", "r", encoding="utf-8") as f:
     data = json.load(f)
 
@@ -38,5 +36,4 @@ for item in data:
         }
     })
 
-# Upsert trực tiếp
 index.upsert(vectors=vectors)
